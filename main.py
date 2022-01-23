@@ -98,8 +98,8 @@ def load_words():
 
 
 def main():
-    # exclude_previous_guesses = False
-    exclude_previous_guesses = True
+    exclude_previous_guesses = False
+    # exclude_previous_guesses = True
     words = load_words()
     letters_frequencies = get_most_common_letters(words)
     words_scores = get_words_scores(words, letters_frequencies)
@@ -114,6 +114,7 @@ def main():
             g = WordleGame(word)
             games.append(g)
 
+            # Both strategies use the same initial guess
             initial_guess = words_scores[0]['word']
             guesses = []
             guesses.append(
@@ -133,6 +134,7 @@ def main():
                     exclude_previous_guesses=exclude_previous_guesses,
                 )
 
+                # If this strategy doesn't produce a next guess we fall back to the initial strat.
                 if exclude_previous_guesses and len(next_guess) < 1:
                     print("FALLBACK ON OTHER STRAT")
                     fallback = True
@@ -150,6 +152,7 @@ def main():
                     }
                 )
 
+            # Keep playing until the game is complete
             while not g.completed:
                 next_guess = get_next_most_likely_word(
                     words=words_scores,
