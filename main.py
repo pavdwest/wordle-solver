@@ -160,42 +160,9 @@ def main():
                         'outcome': g.guess(next_guess[0]['word']),
                     }
                 )
-            # import code; code.interact(local=dict(globals(), **locals()))
+
             f.write(f"{idx},{word},{g.score()},{'True' if fallback else 'False'}\n")
-    # import code; code.interact(local=dict(globals(), **locals()))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # guesses = []
-
-
-
-
-    # # Load guesses
-
-    # g = get_next_most_likely_word(
-    #     words_scores,
-    #     guesses,
-    #     10
-    # )
-
-    # print("====================")
-    # print("=== Next guesses ===")
-    # print("====================")
-    # print(g)
 
 def get_next_most_likely_word(
     words,
@@ -239,7 +206,6 @@ def get_next_most_likely_word(
     # print(f"all_wrong_places: {all_wrong_places}")
     # print(f"slots_open_for_wrong_places: {letters_open_for_wrong_places}")
 
-
     words_found = []
 
     for word_ob in words:
@@ -253,8 +219,6 @@ def get_next_most_likely_word(
             is_invalid = True
             continue
 
-
-
         if not exclude_previous_guesses:
             # All wrong place letters must be in the word
             if not all(i in list(word) for i in all_wrong_places):
@@ -262,8 +226,6 @@ def get_next_most_likely_word(
         else:
             if all(i in list(word) for i in all_wrong_places):
                 continue
-
-        # import code; code.interact(local=dict(globals(), **locals()))
 
         for letter_idx, letter in enumerate(word):
             # Word must not contain an excluded letter
