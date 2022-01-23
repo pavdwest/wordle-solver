@@ -1,5 +1,8 @@
 from wordle_game import WordleGame
 
+
+# Determines frequencies of letters in the given list of words.
+# Frequencies over all letters sum to 1.0
 def get_most_common_letters(words):
     letter_frequencies = []
     letters_count = 0
@@ -30,6 +33,8 @@ def get_most_common_letters(words):
     return letter_frequencies_sorted
 
 
+# Assigns a score to each word based on the frequency distribution of the letters it's composed of
+# e.g. 'If 'a' has a chance of 0.2 to occur and 's' has a chance of 0.12 to occur, 'ass' gets a score of 0.44
 def get_words_scores(words, words_frequencies):
     words_scores = []
     for word in words:
@@ -43,7 +48,6 @@ def get_words_scores(words, words_frequencies):
                 print(f"word: {word} | letter: {letter}")
             letters_used.append(letter)
 
-
         words_scores.append({'word': word, 'score': word_score})
 
     words_scores_sorted = sorted(words_scores, key=lambda d: d['score'], reverse=True)
@@ -54,10 +58,12 @@ def get_words_scores(words, words_frequencies):
     return words_scores_sorted
 
 
+# Checks ASCII code of letter. Only use lower case.
 def is_valid_letter(letter):
     return 97 <= ord(letter) <= 122
 
 
+# Loads words from file and does some cleanup
 def load_words():
     words = []
     # with open('words.txt', newline='') as csvfile:
@@ -144,7 +150,6 @@ def main():
                     }
                 )
 
-
             while not g.completed:
                 next_guess = get_next_most_likely_word(
                     words=words_scores,
@@ -153,7 +158,7 @@ def main():
                     exclude_previous_guesses=False,
                 )
                 if len(next_guess) < 1:
-                    import code; code.interact(local=dict(globals(), **locals()))
+                    print("How the fuck did we get here")
                 guesses.append(
                     {
                         'word': next_guess[0]['word'],
@@ -261,6 +266,7 @@ def get_next_most_likely_word(
             if(len(words_found) > count):
                 return words_found
     return words_found
+
 
 if __name__ == "__main__":
     main()
