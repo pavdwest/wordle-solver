@@ -105,9 +105,9 @@ def main():
     words_scores = get_words_scores(words, letters_frequencies)
 
     games = []
-    # with open('results_pwn.csv', 'w') as f:
-    # with open('results_pwn2.csv', 'w') as f:
-    with open('results_bry.csv', 'w') as f:
+    # with open('results/results_pwn.csv', 'w') as f:
+    # with open('results/results_pwn2.csv', 'w') as f:
+    with open('results/results_bry.csv', 'w') as f:
         f.write('game,word,score,fallback\n')
         for idx, word in enumerate(words):
             print(f"Playing game {idx} of {len(words)}...")
