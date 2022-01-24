@@ -70,7 +70,10 @@ def load_words():
     words = []
     # with open('words.txt', newline='') as csvfile:
     # with open('wordlist.txt', newline='') as csvfile:
-    with open('wordlist.txt', newline='') as csvfile:
+    # with open('wordlist.txt', newline='') as csvfile:
+    # with open('wordle_history.txt', newline='') as csvfile:
+    with open('manual_list.txt', newline='') as csvfile:
+
         for row in csvfile.readlines():
             # word = (row.split(" ")[0]).lower().strip()
             word = row.lower().strip()
@@ -100,14 +103,17 @@ def load_words():
 
 
 def main():
-    exclude_previous_guesses = False
-    # exclude_previous_guesses = True
     words = load_words()
     letters_frequencies = get_most_common_letters(words)
     words_scores = get_words_scores(words, letters_frequencies)
 
     # import code; code.interact(local=dict(globals(), **locals()))
 
+    ##############
+    ### Manual ###
+    ##############
+    exclude_previous_guesses = False
+    # exclude_previous_guesses = True
     guesses = []
     guesses.append(
                 {
@@ -118,22 +124,27 @@ def main():
 
     guesses.append(
                 {
-                    'word': 'toils',
-                    'outcome': '01020',
+                    'word': 'dingo',
+                    'outcome': '00101',
                 }
             )
 
     guesses.append(
                 {
-                    'word': 'wryly',
-                    'outcome': '00020',
+                    'word': 'plonk',
+                    'outcome': '01211',
                 }
             )
 
     print("XXXXXXXXXXXXXXXXXXXXXXXX")
-    print(get_next_most_likely_word(words_scores, guesses, count=10))
+    print(get_next_most_likely_word(words_scores, guesses, count=10, exclude_previous_guesses=exclude_previous_guesses))
+    ##############
 
-
+    ############
+    ### Auto ###
+    ############
+    # # exclude_previous_guesses = False
+    # exclude_previous_guesses = True
     # games = []
     # # with open('results/results_pwn.csv', 'w') as f:
     # # with open('results/results_pwn2.csv', 'w') as f:
