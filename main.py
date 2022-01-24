@@ -30,6 +30,8 @@ def get_most_common_letters(words):
     for l in letter_frequencies_sorted:
         l['score'] = l['frequency'] / letters_count
 
+    print(letter_frequencies_sorted)
+
     return letter_frequencies_sorted
 
 
@@ -104,72 +106,103 @@ def main():
     letters_frequencies = get_most_common_letters(words)
     words_scores = get_words_scores(words, letters_frequencies)
 
-    games = []
-    # with open('results/results_pwn.csv', 'w') as f:
-    # with open('results/results_pwn2.csv', 'w') as f:
-    with open('results/results_bry.csv', 'w') as f:
-        f.write('game,word,score,fallback\n')
-        for idx, word in enumerate(words):
-            print(f"Playing game {idx} of {len(words)}...")
-            g = WordleGame(word)
-            games.append(g)
+    # import code; code.interact(local=dict(globals(), **locals()))
 
-            # Both strategies use the same initial guess
-            initial_guess = words_scores[0]['word']
-            guesses = []
-            guesses.append(
+    guesses = []
+    guesses.append(
                 {
-                    'word': initial_guess,
-                    'outcome': g.guess(initial_guess),
+                    'word': 'beach',
+                    'outcome': '00000',
                 }
             )
 
-            # Second guess
-            fallback = False
-            if not g.completed:
-                next_guess = get_next_most_likely_word(
-                    words=words_scores,
-                    guesses=guesses,
-                    count=1,
-                    exclude_previous_guesses=exclude_previous_guesses,
-                )
+    guesses.append(
+                {
+                    'word': 'toils',
+                    'outcome': '01020',
+                }
+            )
 
-                # If this strategy doesn't produce a next guess we fall back to the initial strat.
-                if exclude_previous_guesses and len(next_guess) < 1:
-                    print("FALLBACK ON OTHER STRAT")
-                    fallback = True
-                    next_guess = get_next_most_likely_word(
-                        words=words_scores,
-                        guesses=guesses,
-                        count=1,
-                        exclude_previous_guesses=False,
-                    )
+    guesses.append(
+                {
+                    'word': 'wryly',
+                    'outcome': '00020',
+                }
+            )
 
-                guesses.append(
-                    {
-                        'word': next_guess[0]['word'],
-                        'outcome': g.guess(next_guess[0]['word']),
-                    }
-                )
+    print("XXXXXXXXXXXXXXXXXXXXXXXX")
+    print(get_next_most_likely_word(words_scores, guesses, count=10))
 
-            # Keep playing until the game is complete
-            while not g.completed:
-                next_guess = get_next_most_likely_word(
-                    words=words_scores,
-                    guesses=guesses,
-                    count=1,
-                    exclude_previous_guesses=False,
-                )
-                if len(next_guess) < 1:
-                    print("How the fuck did we get here")
-                guesses.append(
-                    {
-                        'word': next_guess[0]['word'],
-                        'outcome': g.guess(next_guess[0]['word']),
-                    }
-                )
 
-            f.write(f"{idx},{word},{g.score()},{'True' if fallback else 'False'}\n")
+    # games = []
+    # # with open('results/results_pwn.csv', 'w') as f:
+    # # with open('results/results_pwn2.csv', 'w') as f:
+    # with open('results/tmp.csv', 'w') as f:
+    #     f.write('game,word,score,fallback\n')
+    #     for idx, word in enumerate(words):
+    #         print(f"Playing game {idx} of {len(words)}...")
+    #         g = WordleGame(word)
+    #         games.append(g)
+
+    #         # Both strategies use the same initial guess
+    #         initial_guess = words_scores[0]['word']
+    #         guesses = []
+    #         guesses.append(
+    #             {
+    #                 'word': initial_guess,
+    #                 'outcome': g.guess(initial_guess),
+    #             }
+    #         )
+
+    #         # Second guess
+    #         fallback = False
+    #         if not g.completed:
+    #             next_guess = get_next_most_likely_word(
+    #                 words=words_scores,
+    #                 guesses=guesses,
+    #                 count=1,
+    #                 exclude_previous_guesses=exclude_previous_guesses,
+    #             )
+
+    #             # If this strategy doesn't produce a next guess we fall back to the initial strat.
+    #             if exclude_previous_guesses and len(next_guess) < 1:
+    #                 print("FALLBACK ON OTHER STRAT")
+    #                 fallback = True
+    #                 next_guess = get_next_most_likely_word(
+    #                     words=words_scores,
+    #                     guesses=guesses,
+    #                     count=1,
+    #                     exclude_previous_guesses=False,
+    #                 )
+
+    #             guesses.append(
+    #                 {
+    #                     'word': next_guess[0]['word'],
+    #                     'outcome': g.guess(next_guess[0]['word']),
+    #                 }
+    #             )
+
+    #         # Keep playing until the game is complete
+    #         while not g.completed:
+    #             next_guess = get_next_most_likely_word(
+    #                 words=words_scores,
+    #                 guesses=guesses,
+    #                 count=1,
+    #                 exclude_previous_guesses=False,
+    #             )
+    #             if len(next_guess) < 1:
+    #                 print("How the fuck did we get here")
+    #             guesses.append(
+    #                 {
+    #                     'word': next_guess[0]['word'],
+    #                     'outcome': g.guess(next_guess[0]['word']),
+    #                 }
+    #             )
+    #             if word == 'tight':
+    #                 print(g.guesses)
+    #             #     import code; code.interact(local=dict(globals(), **locals()))
+
+    #         f.write(f"{idx},{word},{g.score()},{'True' if fallback else 'False'}\n")
 
 
 def get_next_most_likely_word(
