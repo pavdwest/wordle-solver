@@ -15,7 +15,7 @@ class WordleGame:
             else:
                 res += '0'
         if res == '22222':
-            print(f"Game complete: Guessed {self.word} in {self.score()}")
+            # print(f"Game complete: Guessed {self.word} in {self.score()}")
             self.completed = True
 
         return res

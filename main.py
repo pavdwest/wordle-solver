@@ -66,14 +66,9 @@ def is_valid_letter(letter):
 
 
 # Loads words from file and does some cleanup
-def load_words():
+def load_words(words_filename: str):
     words = []
-    # with open('words.txt', newline='') as csvfile:
-    # with open('wordlist.txt', newline='') as csvfile:
-    # with open('wordlist.txt', newline='') as csvfile:
-    # with open('wordle_history.txt', newline='') as csvfile:
-    with open('manual_list.txt', newline='') as csvfile:
-
+    with open(words_filename, newline='') as csvfile:
         for row in csvfile.readlines():
             # word = (row.split(" ")[0]).lower().strip()
             word = row.lower().strip()
@@ -103,7 +98,13 @@ def load_words():
 
 
 def main():
-    words = load_words()
+    import code; code.interact(local=dict(globals(), **locals()))
+    # words_filename='words.txt'
+    # words_filename='wordlist.txt'
+    words_filename='wordle_history.txt'
+    # words_filename='manual_list.txt'
+    # words_filename='wordle_dictionary.txt'
+    words = load_words(words_filename=words_filename)
     letters_frequencies = get_most_common_letters(words)
     words_scores = get_words_scores(words, letters_frequencies)
 
@@ -118,21 +119,21 @@ def main():
     guesses.append(
                 {
                     'word': 'beach',
-                    'outcome': '00000',
+                    'outcome': '00100',
                 }
             )
 
     guesses.append(
                 {
-                    'word': 'dingo',
-                    'outcome': '00101',
+                    'word': 'dogma',
+                    'outcome': '00201',
                 }
             )
 
     guesses.append(
                 {
-                    'word': 'plonk',
-                    'outcome': '01211',
+                    'word': 'angst',
+                    'outcome': '10210',
                 }
             )
 
@@ -140,18 +141,24 @@ def main():
     print(get_next_most_likely_word(words_scores, guesses, count=10, exclude_previous_guesses=exclude_previous_guesses))
     ##############
 
-    ############
-    ### Auto ###
-    ############
-    # # exclude_previous_guesses = False
-    # exclude_previous_guesses = True
+    # ############
+    # ### Auto ###
+    # ############
+    # exclude_previous_guesses = False
+    # # exclude_previous_guesses = True
     # games = []
+    # notify_every_n_games = 500
     # # with open('results/results_pwn.csv', 'w') as f:
     # # with open('results/results_pwn2.csv', 'w') as f:
     # with open('results/tmp.csv', 'w') as f:
     #     f.write('game,word,score,fallback\n')
+    #     print("Starting simulation...")
     #     for idx, word in enumerate(words):
-    #         print(f"Playing game {idx} of {len(words)}...")
+    #         # print(f"Playing game {idx} of {len(words)}...")
+
+    #         if idx % notify_every_n_games == 0:
+    #             print(f"Playing game {idx} of {len(words)}...")
+
     #         g = WordleGame(word)
     #         games.append(g)
 
@@ -177,7 +184,7 @@ def main():
 
     #             # If this strategy doesn't produce a next guess we fall back to the initial strat.
     #             if exclude_previous_guesses and len(next_guess) < 1:
-    #                 print("FALLBACK ON OTHER STRAT")
+    #                 # print("FALLBACK ON OTHER STRAT")
     #                 fallback = True
     #                 next_guess = get_next_most_likely_word(
     #                     words=words_scores,
@@ -202,6 +209,7 @@ def main():
     #                 exclude_previous_guesses=False,
     #             )
     #             if len(next_guess) < 1:
+    #                 print(f"NEED TO GUESS: {word}")
     #                 print("How the fuck did we get here")
     #             guesses.append(
     #                 {
@@ -291,9 +299,10 @@ def get_next_most_likely_word(
             # Optional don't use any previous info
             if exclude_previous_guesses:
                 # If word contains any of the previous correct letters, skip it
-                if letter == known_letter:
-                    is_invalid = True
-                    break    # Can actually skip whole word
+                if known_letter is not None:
+                    if letter == known_letter:
+                        is_invalid = True
+                        break    # Can actually skip whole word
             else:
                 if known_letter is not None:
                     if letter != known_letter:
@@ -304,6 +313,26 @@ def get_next_most_likely_word(
             if letter in places_letters[letter_idx]['wrong_place']:
                 is_invalid = True
                 continue
+
+            # TODO: Ensure that all of this position's wrong places can be allocated to other unsolved positions
+            allocs = []
+            for wrong_place_letter_idx, wrong_place_letter in enumerate(places_letters[letter_idx]['wrong_place']):
+                # print(f"wrong_place_letter_idx: {wrong_place_letter_idx}")
+                for other_letter_idx in range(len(word)):
+                    if other_letter_idx != letter_idx: #and places_letters[other_letter_idx]['known'] is None:
+                        if wrong_place_letter not in places_letters[other_letter_idx]['wrong_place']:
+                            # print(f"appended: {wrong_place_letter_idx} to {other_letter_idx}")
+                            allocs.append(wrong_place_letter_idx)
+
+            # print(f"word: {word}")
+            # print(f"letter: {letter}")
+            # print(f"letter_idx: {letter_idx}")
+            # print(f"places_letters: {places_letters}")
+            # print(f"allocs: {allocs}")
+            allocs = list(dict.fromkeys(allocs))
+            if len(allocs) != len(places_letters[letter_idx]['wrong_place']):
+                import code; code.interact(local=dict(globals(), **locals()))
+                is_invalid = True
 
         if is_invalid:
             continue
